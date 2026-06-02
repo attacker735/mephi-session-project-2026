@@ -1,0 +1,9 @@
+    1  cd /data/mephi-web
+    2  echo "Hello from Student: M255996" > index.html
+    3  cat index.html
+    4  exit
+    5  curl http://localhost
+    6  curl http://192.168.1.100
+    7  journalctl -u nginx --since "5 minutes ago" > ~/nginx_recent_logs.txt
+    8  exit
+    9  history > ~/mephi_admin_history.txt
