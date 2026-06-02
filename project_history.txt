@@ -1,0 +1,78 @@
+    1  nmcli device status
+    2  nmcli connection show
+    3  nmcli connection modify "Wired connection 1" ipv4.addresses 192.168.1.100/24
+    4  nmcli connection modify "Wired connection 1" ipv4.gateway 192.168.1.1
+    5  nmcli connection modify "Wired connection 1" ipv4.dns "8.8.8.8"
+    6  nmcli connection modify "Wired connection 1" ipv4.method manual
+    7  nmcli connection down "Wired connection 1"
+    8  nmcli connection up "Wired connection 1"
+    9  ip addr show enp0s3
+   10  hostnamectl set-hostname mephi-2026.domain.local
+   11  hostname
+   12  hostnamectl
+   13  ip route show default
+   14  ping -c 4 192.168.1.1
+   15  ping -c 4 8.8.8.8
+   16  ping -c 4 8.8.8.8 > /tmp/network_check.txt
+   17  ping -c 4 192.168.1.1 >> /tmp/network_check.txt
+   18  cat /tmp/network_check.txt
+   19  ######## task 2 #########
+   20  sudo dnf install -y nginx
+   21  sudo dnf install -y tcpdump
+   22  sudo dnf install -y libcap-ng-utils
+   23  rpm -qa | grep -E "nginx|tcpdump|libcap-ng"
+   24  sudo dnf download tcpdump --destdir=/tmp
+   25  ls -la /tmp/tcpdump-*.rpm
+   26  sudo rpm -ivh /tmp/tcpdump-*.rpm
+   27  sudo dnf remove -y tcpdump
+   28  sudo rpm -ivh /tmp/tcpdump-*.rpm
+   29  tcpdump --version
+   30  ######## task 3 ########
+   31  lsblk
+   32  sudo fdisk /dev/sdb
+   33  sudo fdisk /dev/sda
+   34  echo -e "n\np\n1\n\n\nw" | sudo fdisk /dev/sda
+   35  lsblk
+   36  sudo mkfs.ext4 -L MEPHI_DATA /dev/sda1
+   37  sudo mkdir -p /data/mephi-web
+   38  echo "LABEL=MEPHI_DATA /data/mephi-web ext4 defaults 0 2" | sudo tee -a /etc/fstab
+   39  cat /etc/fstab
+   40  sudo mount -a
+   41  df -h /data/mephi-web
+   42  systemctl start nginx
+   43  systemctl status nginx
+   44  systemctl enable nginx
+   45  curl http://localhost
+   46  journalctl -u nginx --since "5 minutes ago" > /tmp/nginx_recent_logs.txt
+   47  cat /tmp/nginx_recent_logs.txt
+   48  ######## task 4 #########
+   49  useradd mephi-admin
+   50  sudo useradd mephi-admin
+   51  sudo passwd mephi-admin
+   52  sudo groupadd mephi-devs
+   53  sudo usermod -aG mephi-devs mephi-admin
+   54  groups mephi-admin
+   55  chown mephi-admin:mephi-devs /data/mephi-web
+   56  sudo chown mephi-admin:mephi-devs /data/mephi-web
+   57  ls -ld /data/mephi-web
+   58  sudo chmod 2775 /data/mephi-web
+   59  ls -ld /data/mephi-web
+   60  getenforce
+   61  ls -Z /data/
+   62  sudo semanage fcontext -a -t httpd_sys_content_t "/data/mephi-web(/.*)?"
+   63  sudo restorecon -Rv /data/mephi-web
+   64  ls -Z /data/mephi-web
+   65  ls -l /usr/sbin/tcpdump
+   66  sudo chmod -s /usr/sbin/tcpdump
+   67  sudo setcap cap_net_raw,cap_net_admin+ep /usr/sbin/tcpdump
+   68  getcap /usr/sbin/tcpdump
+   69  sudo -u mephi-admin tcpdump --help
+   70  sudo -u mephi-admin tcpdump -h
+   71  ######## task 5 ########
+   72  su - mephi-admin
+   73  sudo nano /etc/nginx/nginx.conf
+   74  sudo nginx -t
+   75  sudo systemctl restart nginx
+   76  curl http://localhost
+   77  curl http://192.168.1.100
+   78  history > ~/project_history.txt
